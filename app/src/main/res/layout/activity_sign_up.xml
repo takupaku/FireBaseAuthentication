@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:id="@+id/userEmailSign"
+        android:hint="user Email"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:id="@+id/userPasswordSign"
+        android:inputType="textPassword"
+        android:hint="user Pass"
+        android:layout_height="wrap_content" />
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:id="@+id/informConformPass"
+        android:inputType="textPassword"
+        android:hint="user Pass"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:id="@+id/loginIdSign"
+        android:text="SignUp"
+        android:onClick="SignUpBtn"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/signUpIdSign"
+        android:onClick="logInPage"
+        android:text="dont have account"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>
