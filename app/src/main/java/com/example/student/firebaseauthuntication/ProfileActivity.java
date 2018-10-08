@@ -17,8 +17,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -56,6 +58,8 @@ public class ProfileActivity extends AppCompatActivity {
     private void initVariable() {
         sReference = FirebaseStorage.getInstance().getReference("USER_PHOTO");
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String Uemail = firebaseUser.getEmail().toString();
+        email.setText(Uemail);
     }
 
     private void addListener() {
@@ -109,6 +113,7 @@ public class ProfileActivity extends AppCompatActivity {
         email=findViewById(R.id.userEmailProfile);
         dialog= new ProgressBar(this);
 
+
         editBtn=findViewById(R.id.enableEdit);
 
 
@@ -117,7 +122,8 @@ public class ProfileActivity extends AppCompatActivity {
     public void updateProfile(View view) {
 
         dia.setMessage("loading...");
-                dia.show();
+        dia.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        dia.show();
 
         String imageName = System.currentTimeMillis() + ".jpg";
         sReference.child(imageName).putFile(uri)
@@ -157,6 +163,18 @@ public class ProfileActivity extends AppCompatActivity {
         UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder().
 
         setPhotoUri(Uri.parse(downloadUrl)).setDisplayName(updateName.getText().toString().trim()).build();
-        firebaseUser.updateProfile(changeRequest);
+        firebaseUser.updateProfile(changeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(ProfileActivity.this, "Updated", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ProfileActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
