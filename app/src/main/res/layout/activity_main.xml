@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#483D8B"
+    android:padding="20dp"
     tools:context=".MainActivity">
 
 
@@ -13,6 +15,7 @@
     <EditText
         android:layout_width="match_parent"
         android:id="@+id/userEmail"
+        android:layout_margin="5dp"
         android:hint="user Email"
         android:layout_height="wrap_content" />
 
@@ -21,6 +24,8 @@
     <EditText
         android:layout_width="match_parent"
         android:id="@+id/userPassword"
+        android:layout_margin="5dp"
+
         android:inputType="textPassword"
         android:hint="user Pass"
         android:layout_height="wrap_content" />
@@ -28,6 +33,8 @@
     <Button
         android:layout_width="match_parent"
         android:id="@+id/loginId"
+        android:layout_margin="5dp"
+
         android:text="SignUp"
         android:onClick="loginBtn"
         android:layout_height="wrap_content" />
@@ -35,8 +42,10 @@
     <TextView
         android:layout_width="match_parent"
         android:id="@+id/signUpId"
+        android:textSize="20dp"
+        android:layout_margin="5dp"
         android:onClick="signUpPage"
-        android:text="dont have account"
+        android:text="Already have account?? log in"
         android:layout_height="wrap_content" />
 
 

@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".SignUpActivity">
 
 
 
@@ -25,11 +26,11 @@
 
 
     <EditText
-        android:layout_width="match_parent"
-        android:id="@+id/informConformPass"
-        android:inputType="textPassword"
-        android:hint="user Pass"
-        android:layout_height="wrap_content" />
+    android:layout_width="match_parent"
+    android:id="@+id/informConformPass"
+    android:inputType="textPassword"
+    android:hint="Confirm Pass"
+    android:layout_height="wrap_content" />
 
     <Button
         android:layout_width="match_parent"
@@ -42,7 +43,7 @@
         android:layout_width="match_parent"
         android:id="@+id/signUpIdSign"
         android:onClick="logInPage"
-        android:text="dont have account"
+        android:text="dont have account,Sign up"
         android:layout_height="wrap_content" />
 
 
