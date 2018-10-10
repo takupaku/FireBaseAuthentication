@@ -1,6 +1,7 @@
 package com.example.student.firebaseauthuntication;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -50,6 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ProgressDialog dia;
     private FirebaseUser firebaseUser;
     private FirebaseAuth firebaseAuth;
+    private TextView verified;
 
 
     @Override
@@ -64,6 +66,13 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void loadProfileInfo() {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(firebaseUser.isEmailVerified()){
+            verified.setText("Verified");
+        }
+        else {
+            verified.setText("not verified");
+        }
         if(firebaseUser!=null){
             email.setText(firebaseUser.getEmail().toString());
 
@@ -108,6 +117,19 @@ public class ProfileActivity extends AppCompatActivity {
                 updateName.setVisibility(View.VISIBLE);
             }
         });
+
+        verified.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(ProfileActivity.this).setMessage("Verified").setCancelable(false)
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                firebaseUser.sendEmailVerification();
+                            }
+                        }).setNegativeButton("NO",null).show();
+            }
+        });
     }
 
     @Override
@@ -134,6 +156,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        verified=findViewById(R.id.isVerified);
         name=findViewById(R.id.userName);
         updateName=findViewById(R.id.userNameEdit);
         photo=findViewById(R.id.userPhoto);
@@ -235,11 +258,13 @@ public class ProfileActivity extends AppCompatActivity {
         final EditText oldpass = view.findViewById(R.id.oldPass);
         final EditText newpass = view.findViewById(R.id.newPass);
 
-        final AlertDialog dialog = builder.show();
+
         final EditText confirmpass = view.findViewById(R.id.confirmPass);
 
         Button button = view.findViewById(R.id.resetPassId);
         builder.setView(view);
+        final AlertDialog dialog = builder.show();
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -67,4 +67,14 @@
         android:id="@+id/enableEdit"
         android:onClick="updateProfile"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Not verified"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:layout_margin="29dp"
+        android:id="@+id/isVerified"
+        />
+
 </LinearLayout>
