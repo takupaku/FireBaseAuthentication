@@ -35,7 +35,7 @@
         android:id="@+id/loginId"
         android:layout_margin="5dp"
 
-        android:text="SignUp"
+        android:text="Log In"
         android:onClick="loginBtn"
         android:layout_height="wrap_content" />
 
@@ -45,8 +45,17 @@
         android:textSize="20dp"
         android:layout_margin="5dp"
         android:onClick="signUpPage"
-        android:text="Already have account?? log in"
+        android:text="Dont have account?? Sign Up"
         android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:layout_marginTop="50dp"
+        android:text="forgot password?"
+        android:textAlignment="center"
+        android:onClick="FORGOTpASSWORD"/>
 
 
 </LinearLayout>

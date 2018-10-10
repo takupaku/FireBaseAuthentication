@@ -1,7 +1,9 @@
 package com.example.student.firebaseauthuntication;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -69,5 +71,33 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this,SignUpActivity.class));
         finish();
 
+    }
+
+    public void FORGOTpASSWORD(View view) {
+        final String _email = userEmail.getText().toString().trim();
+
+        if(_email.isEmpty()){
+            userEmail.setError("enter email");
+            userEmail.requestFocus();
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setMessage("you are resetting your old password, proceed?");
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mAuth.sendPasswordResetEmail(_email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(MainActivity.this, "email sent", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+        builder.setNegativeButton("NO",null);
+        builder.show();
     }
 }

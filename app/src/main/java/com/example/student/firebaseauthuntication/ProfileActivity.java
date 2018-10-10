@@ -235,6 +235,7 @@ public class ProfileActivity extends AppCompatActivity {
         final EditText oldpass = view.findViewById(R.id.oldPass);
         final EditText newpass = view.findViewById(R.id.newPass);
 
+        final AlertDialog dialog = builder.show();
         final EditText confirmpass = view.findViewById(R.id.confirmPass);
 
         Button button = view.findViewById(R.id.resetPassId);
@@ -266,6 +267,7 @@ public class ProfileActivity extends AppCompatActivity {
                                                             if(task.isSuccessful()){
                                                                 Toast.makeText(ProfileActivity.this, "pass update", Toast.LENGTH_SHORT).show();
                                                             }
+                                                            dialog.dismiss();
                                                         }
                                                     });
 
