@@ -7,7 +7,7 @@
         android:id="@+id/logOut"/>
 
     <item
-        android:title="Log out"
+        android:title="reset password"
         android:id="@+id/resetPass"/>
 
 </menu>
