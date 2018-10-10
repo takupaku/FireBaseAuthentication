@@ -1,5 +1,6 @@
 package com.example.student.firebaseauthuntication;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -8,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,10 +20,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -44,6 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ProgressBar dialog;
     private ProgressDialog dia;
     private FirebaseUser firebaseUser;
+    private FirebaseAuth firebaseAuth;
 
 
     @Override
@@ -53,10 +59,32 @@ public class ProfileActivity extends AppCompatActivity {
         initView();
         addListener();
         initVariable();
+        loadProfileInfo();
     }
+
+    private void loadProfileInfo() {
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(firebaseUser!=null){
+            email.setText(firebaseUser.getEmail().toString());
+
+            if(firebaseUser.getDisplayName()!=null)
+            name.setText(firebaseUser.getDisplayName().toString());
+
+            //loading photo, with glide library by bumptech
+            if(firebaseUser.getPhotoUrl()!=null){
+                String url = firebaseUser.getPhotoUrl().toString();
+                Glide.with(this).load(url).into(photo);
+            }
+
+
+        }
+
+    }
+
 
     private void initVariable() {
         sReference = FirebaseStorage.getInstance().getReference("USER_PHOTO");
+        firebaseAuth=FirebaseAuth.getInstance();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String Uemail = firebaseUser.getEmail().toString();
         email.setText(Uemail);
@@ -111,7 +139,7 @@ public class ProfileActivity extends AppCompatActivity {
         photo=findViewById(R.id.userPhoto);
 
         email=findViewById(R.id.userEmailProfile);
-        dialog= new ProgressBar(this);
+        dia= new ProgressDialog(this);
 
 
         editBtn=findViewById(R.id.enableEdit);
@@ -123,6 +151,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         dia.setMessage("loading...");
         dia.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        dia.setCancelable(false);
         dia.show();
 
         String imageName = System.currentTimeMillis() + ".jpg";
@@ -176,5 +205,76 @@ public class ProfileActivity extends AppCompatActivity {
                 Toast.makeText(ProfileActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.my_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.logOut){
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this,MainActivity.class));
+            finish();
+            return true;
+        }
+        if(item.getItemId()==R.id.resetPass){
+            resetPassword();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void resetPassword() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = getLayoutInflater().inflate(R.layout.reset_password,null);
+
+        final EditText oldpass = view.findViewById(R.id.oldPass);
+        final EditText newpass = view.findViewById(R.id.newPass);
+
+        final EditText confirmpass = view.findViewById(R.id.confirmPass);
+
+        Button button = view.findViewById(R.id.resetPassId);
+        builder.setView(view);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String _email =  firebaseUser.getEmail().toString();
+                String _oldPass = oldpass.getText().toString().trim();
+                final String _newPass = newpass.getText().toString().trim();
+                String confirm = confirmpass.getText().toString().trim();
+
+                //check pass
+                if(!_newPass.equals(confirm)){
+                    confirmpass.setError("pass not matched");
+                    confirmpass.requestFocus();
+                    return;
+                }
+                        firebaseAuth.signInWithEmailAndPassword(_email,_oldPass)
+                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if(task.isSuccessful()){
+                                            firebaseUser.updatePassword(_newPass)
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if(task.isSuccessful()){
+                                                                Toast.makeText(ProfileActivity.this, "pass update", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    });
+
+                                        }
+                                    }
+                                });
+
+            }
+        });
+
     }
 }
